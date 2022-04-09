@@ -80,6 +80,8 @@ const Register = () => {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
+
+    // password charecter check
     if (!/(?=.*?[#?!@$%^&*-])/.test(password)) {
       setError("Password should contain at least one special character");
       return;

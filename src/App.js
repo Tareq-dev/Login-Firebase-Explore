@@ -1,75 +1,42 @@
 import React from "react";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import app from "./firebase.init";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  GithubAuthProvider,
-} from "firebase/auth";
-import { useState } from "react";
-import Form from "./Form/Form";
-
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./components/Home/Home";
+import Products from "./components/Products/Products";
+import Orders from "./components/Orders/Orders";
+import Register from "./components/Register/Register";
+import Vip from "./components/Vip/Vip";
+import Login from "./components/Login/Login";
+import RequireAuth from "./components/RequireAuth/RequireAuth";
 
 function App() {
-  const [user, setUser] = useState([]);
-
-  const auth = getAuth(app);
-  const Goolgeprovider = new GoogleAuthProvider();
-  const Githubprovider = new GithubAuthProvider();
-
-  const googleSignIn = () => {
-    signInWithPopup(auth, Goolgeprovider)
-      .then((result) => {
-        const user = result.user;
-        setUser(user);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const googleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        setUser({});
-      })
-      .catch((error) => {
-        setUser({});
-      });
-  };
-
-  const githubSignIn = () => {
-    signInWithPopup(auth, Githubprovider)
-      .then((res) => {
-        const user = res.user;
-        setUser(user);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   return (
     <div>
-     <div className="App">
-     <h3>let's build user authentication</h3>
+      <Navbar/>
+      <Routes>
+        <Route path="/" element={<Home></Home>} />
 
-     {user.uid ? (
-       <button onClick={googleSignOut}> Sign Out</button>
-     ) : (
-       <>
-         <button onClick={googleSignIn}>Google Sign In</button>
-         <button className="mx-5" onClick={githubSignIn}>Github Sign In</button>
-       </>
-     )}
-     <br />
-     <h3>{user.displayName}</h3>
-     <img src={user.photoURL} alt="" />
-     </div>
-      <div>
-    <Form />
-      </div>
+        <Route path="/register" element={<Register></Register>} />
+        <Route path="/login" element={<Login></Login>} />
+        <Route path="/vip" element={<Vip></Vip>} />
+        <Route
+          path="/orders"
+          element={
+            <RequireAuth>
+              <Orders></Orders>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <RequireAuth>
+              <Products></Products>
+            </RequireAuth>
+          }
+        />
+      </Routes>
     </div>
   );
 }
